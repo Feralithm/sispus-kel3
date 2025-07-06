@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard Admin</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f2f5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-section,
+    .table-section {
+      background: white;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    input,
+    button {
+      padding: 10px;
+      margin: 5px;
+      font-size: 14px;
+    }
+
+    input {
+      width: 200px;
+    }
+
+    button {
+      background-color: royalblue;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button.logout {
+      background-color: crimson;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    table th,
+    table td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    table th {
+      background: #eee;
+    }
+
+    @media (max-width: 600px) {
+      input {
+        width: 100%;
+      }
+    }
+  </style>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user || user.role !== 'admin') {
+      alert('Hanya admin yang boleh mengakses halaman ini');
+      window.location.href = 'login.html';
+    }
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <div style="text-align: right; margin-bottom: 10px;">
+      <button class="logout" onclick="logout()">Logout</button>
+    </div>
+
+    <h2>📊 Dashboard Admin</h2>
+
+    <div class="form-section">
+      <h3>📘 Tambah Buku Baru</h3>
+      <input type="text" id="title" placeholder="Judul Buku" />
+      <input type="text" id="author" placeholder="Penulis" />
+      <input type="number" id="stock" placeholder="Stok" />
+      <input type="file" id="imageFile" />
+      <button onclick="tambahBuku()">Tambah</button>
+      <p id="message" style="color: green;"></p>
+    </div>
+
+    <div class="table-section">
+      <h3>📚 Daftar Buku</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>ID Buku</th>
+            <th>Judul</th>
+            <th>Penulis</th>
+            <th>Stok</th>
+          </tr>
+        </thead>
+        <tbody id="bookTable"></tbody>
+      </table>
+    </div>
+
+    <div class="table-section">
+      <h3>📖 Riwayat Peminjaman</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Judul Buku</th>
+            <th>Penulis</th>
+            <th>Dipinjam Oleh</th>
+            <th>Tgl Pinjam</th>
+            <th>Tgl Kembali</th>
+          </tr>
+        </thead>
+        <tbody id="loanTable"></tbody>
+      </table>
+    </div>
+
+    <div class="table-section">
+      <h3>👥 Daftar Pengguna</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nama</th>
+            <th>Username</th>
+          </tr>
+        </thead>
+        <tbody id="userTable"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <script>
+    function logout() {
+      localStorage.removeItem('user');
+      window.location.href = 'login.html';
+    }
+
+    function loadRiwayat() {
+      fetch('/api/admin/loans')
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.getElementById('loanTable');
+          tbody.innerHTML = '';
+          data.forEach(l => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${l.bookTitle}</td>
+              <td>${l.bookAuthor}</td>
+              <td>${l.username}</td>
+              <td>${new Date(l.borrowDate).toLocaleDateString()}</td>
+              <td>${l.returnDate ? new Date(l.returnDate).toLocaleDateString() : '-'}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        });
+    }
+
+    function loadBuku() {
+      fetch('/api/books')
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.getElementById('bookTable');
+          tbody.innerHTML = '';
+          data.forEach(b => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${b.id}</td>
+              <td>${b.title}</td>
+              <td>${b.author}</td>
+              <td>${b.stock}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        });
+    }
+
+    function loadUsers() {
+      fetch('/api/admin/users')
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.getElementById('userTable');
+          tbody.innerHTML = '';
+          data.forEach(u => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+          <td>${u.id}</td>
+          <td>${u.name}</td>
+          <td>${u.username}</td>
+        `;
+            tbody.appendChild(tr);
+          });
+        });
+    }
+
+    function tambahBuku() {
+      const title = document.getElementById('title').value;
+      const author = document.getElementById('author').value;
+      const stock = document.getElementById('stock').value;
+      const imageFile = document.getElementById('imageFile').files[0];
+
+      if (!title || !author || !stock || !imageFile) {
+        alert('Harap isi semua field dan pilih gambar!');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('author', author);
+      formData.append('stock', stock);
+      formData.append('image', imageFile);
+
+      fetch('/api/admin/books', {
+        method: 'POST',
+        body: formData
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('message').textContent = data.message || 'Gagal menambahkan';
+          loadBuku();
+
+          // Reset input form
+          document.getElementById('title').value = '';
+          document.getElementById('author').value = '';
+          document.getElementById('stock').value = '';
+          document.getElementById('imageFile').value = '';
+        });
+    }
+
+    loadRiwayat();
+    loadUsers();
+    loadBuku();
+  </script>
+</body>
+
+</html>

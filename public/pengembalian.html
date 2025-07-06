@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Pengembalian Buku</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    const userLogin = JSON.parse(localStorage.getItem('user'));
+    if (!userLogin) {
+      window.location.href = 'login.html';
+    } else if (user.role === 'admin') {
+      alert('Admin tidak diizinkan mengakses halaman ini');
+      window.location.href = 'admin-dashboard.html';
+    }
+  </script>
+</head>
+
+<body>
+  <div class="card">
+    <h3>Pengembalian Buku</h3>
+    <input type="text" id="bookId" placeholder="ID Buku">
+    <button onclick="returnBook()">Kembalikan</button>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    function returnBook() {
+      const bookId = document.getElementById('bookId').value;
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!bookId) {
+        alert('ID buku tidak boleh kosong');
+        return;
+      }
+
+      fetch('/api/loans/return', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, bookId })
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('message').innerText = data.message;
+        });
+    }
+  </script>
+</body>
+
+</html>

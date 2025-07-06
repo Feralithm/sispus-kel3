@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Perpustakaan</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div class="card">
+    <h2>Sistem Informasi Perpustakaan</h2>
+    <h3>Login</h3>
+    <input autocomplete="off" type="text" id="username" placeholder="Username" />
+    <input autocomplete="off" type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+
+    <p style="margin-top: 12px;">
+      Belum punya akun?
+      <a href="register.html">Daftar di sini</a>
+    </p>
+  </div>
+  </div>
+
+  <script>
+    function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (!username || !password) {
+        alert('Harap isi username dan password.');
+        return;
+      }
+
+      fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.user) {
+            localStorage.setItem('user', JSON.stringify(data.user));
+            if (data.user.role === 'admin') {
+              window.location.href = 'admin-dashboard.html';
+            } else {
+              window.location.href = 'index.html';
+            }
+          } else {
+            alert(data.message || 'Login gagal');
+          }
+        });
+    }
+  </script>
+</body>
+
+</html>

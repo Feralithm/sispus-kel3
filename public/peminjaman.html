@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pinjam Buku</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .message {
+      text-align: center;
+      margin-bottom: 15px;
+      color: green;
+      font-weight: bold;
+    }
+
+    .grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 15px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-content h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .card-content p {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+
+    .card-content button {
+      margin-top: auto;
+      padding: 10px;
+      background: royalblue;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .card-content button:disabled {
+      background: gray;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 500px) {
+      .card img {
+        height: 140px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h2>📚 Daftar Buku Tersedia</h2>
+    <div style="margin-bottom: 20px; text-align: left;">
+      <a href="index.html"
+        style="display: inline-block; padding: 8px 16px; background: #007bff; color: white; border-radius: 4px; text-decoration: none;">←
+        Kembali ke Beranda</a>
+    </div>
+
+  </header>
+
+  <div class="container">
+    <div id="message" class="message"></div>
+    <div class="grid" id="bookList"></div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+      window.location.href = 'login.html';
+    } else if (user.role === 'admin') {
+      alert('Admin tidak boleh mengakses halaman ini!');
+      window.location.href = 'admin-dashboard.html';
+    }
+
+    function loadBooks() {
+      fetch('/api/books')
+        .then(res => res.json())
+        .then(data => {
+          const bookList = document.getElementById('bookList');
+          bookList.innerHTML = '';
+
+          data.forEach(book => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+              <img src="${book.image}" alt="${book.title}" onerror="this.src='images/default.jpg'">
+              <div class="card-content">
+                <h3>${book.title}</h3>
+                <p><strong>Penulis:</strong> ${book.author}</p>
+                <p><strong>Stok:</strong> ${book.stock}</p>
+                <button ${book.stock <= 0 ? 'disabled' : ''} onclick="pinjamBuku('${book.id}')">
+                  ${book.stock > 0 ? 'Pinjam Buku' : 'Stok Habis'}
+                </button>
+              </div>
+            `;
+            bookList.appendChild(card);
+          });
+        });
+    }
+
+    function pinjamBuku(bookId) {
+      fetch('/api/loans', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          bookId
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('message').textContent = data.message || 'Terjadi kesalahan';
+          loadBooks();
+        });
+    }
+
+    loadBooks();
+  </script>
+</body>
+
+</html>

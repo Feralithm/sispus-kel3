@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Pusat Bantuan</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    const user = localStorage.getItem('user');
+    if (!user) {
+      window.location.href = 'login.html';
+    }
+  </script>
+  <script>
+    const userLogin = JSON.parse(localStorage.getItem('user'));
+    if (!userLogin) {
+      window.location.href = 'login.html';
+    } else if (user.role === 'admin') {
+      alert('Admin tidak diizinkan mengakses halaman ini');
+      window.location.href = 'admin-dashboard.html';
+    }
+  </script>
+
+</head>
+
+<body>
+  <div class="card">
+    <h3>Pusat Bantuan</h3>
+    <input type="text" placeholder="Ketik pertanyaan Anda...">
+    <h4>Pertanyaan Populer</h4>
+    <ul>
+      <li>Bagaimana cara memperpanjang peminjaman?</li>
+      <li>Bagaimana cara menghapus denda?</li>
+      <li>Bagaimana melihat status buku?</li>
+    </ul>
+    <button>Ajukan Pertanyaan Baru</button>
+  </div>
+</body>
+
+</html>

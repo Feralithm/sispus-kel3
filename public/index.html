@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Beranda - Perpustakaan</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    const userLogin = JSON.parse(localStorage.getItem('user'));
+    if (!userLogin) {
+      window.location.href = 'login.html';
+    } else if (user.role === 'admin') {
+      alert('Admin tidak diizinkan mengakses halaman ini');
+      window.location.href = 'admin-dashboard.html';
+    }
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #f0f2f5;
+    }
+
+    .card {
+      max-width: 500px;
+      margin: 60px auto;
+      background: white;
+      padding: 30px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 24px;
+      font-size: 24px;
+    }
+
+    button.secondary {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      background: royalblue;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .logout {
+      background: crimson;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        margin: 20px;
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      button.secondary {
+        font-size: 15px;
+        padding: 14px;
+      }
+    }
+  </style>
+
+
+</head>
+
+<body>
+  <div class="card">
+    <h2>Sistem Informasi Perpustakaan</h2>
+    <button onclick="location.href='peminjaman.html'" class="secondary">📚 Peminjaman Buku</button>
+    <button onclick="location.href='pengembalian.html'" class="secondary">🔄 Pengembalian Buku</button>
+    <button onclick="location.href='pencarian.html'" class="secondary">🔍 Pencarian Buku</button>
+    <button onclick="location.href='profil.html'" class="secondary">👤 Profil</button>
+    <button onclick="location.href='bantuan.html'" class="secondary">🆘 Pusat Bantuan</button>
+    <button class="logout redbutton" onclick="logout()">🚪 Logout</button>
+  </div>
+
+  <script>
+    function logout() {
+      localStorage.removeItem('user');
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+
+</html>

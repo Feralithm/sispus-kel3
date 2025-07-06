@@ -1,0 +1,51 @@
+[
+  {
+    "id": "b2751803243770",
+    "title": "Pemrograman Dasar",
+    "author": "Cia S.Kom",
+    "stock": 1,
+    "image": "img/pemrograman-dasar.png"
+  },
+  {
+    "id": "b3751803243770",
+    "title": "Struktur Data",
+    "author": "Pak zul",
+    "stock": 2,
+    "image": "img/struktur-data.png"
+  },
+  {
+    "id": "b6751803243770",
+    "title": "Sistem Operasi",
+    "author": "Pak Andi",
+    "stock": 1,
+    "image": "img/sistem-operasi.png"
+  },
+  {
+    "id": "b9751803243770",
+    "title": "Basis Data",
+    "author": "Bu riska",
+    "stock": 4,
+    "image": "img/basis-data.png"
+  },
+  {
+    "id": "b1751803243770",
+    "title": "The Intelligent Investor",
+    "author": "Benjamin Graham",
+    "stock": 4,
+    "image": ""
+  },
+  {
+    "id": "b1751805329509",
+    "title": "The Warren Buffett Way ",
+    "author": "Robert G. Hagstrom",
+    "stock": 4,
+    "image": "/img/1751805329497_98074594-45f1-466a-82eb-851d44c2ed0e.jpg"
+  },
+  {
+    "id": "b1751805557402",
+    "title": "Security Analysis",
+    "author": "Benjamin Graham dan David Dodd",
+    "stock": 3,
+    "image": "/img/1751805557399_download (1).jpeg"
+  }
+]

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div class="card">
+    <h2>Sistem Informasi Perpustakaan</h2>
+    <h2>Daftar Akun</h2>
+    <input autocomplete="off" type="text" id="name" placeholder="Nama Lengkap" />
+    <input autocomplete="off" type="text" id="username" placeholder="Username" />
+    <input autocomplete="off" type="password" id="password" placeholder="Password" />
+    <button onclick="register()">Register</button>
+    <p id="message"></p>
+    <p style="margin-top: 12px;">
+      Sudah punya akun?
+      <a href="login.html">Login di sini</a>
+    </p>
+  </div>
+
+  <script>
+    function register() {
+      const name = document.getElementById('name').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (!name || !username || !password) {
+        alert('Harap lengkapi semua field.');
+        return;
+      }
+
+      fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, username, password })
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('message').innerText = data.message;
+          if (data.user) {
+            setTimeout(() => location.href = 'login.html', 1000);
+          }
+        });
+    }
+  </script>
+</body>
+
+</html>
