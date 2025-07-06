@@ -14,7 +14,6 @@ app.use(fileUpload());
 app.use('/img', express.static('img'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// API routes
 app.use('/api', userRoutes);
 app.use('/api/admin', adminRoutes);
 
