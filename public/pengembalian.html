@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <title>Pengembalian Buku</title>
   <link rel="stylesheet" href="css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>
     const userLogin = JSON.parse(localStorage.getItem('user'));
     if (!userLogin) {
@@ -17,10 +18,17 @@
 </head>
 
 <body>
+
   <div class="card">
     <h3>Pengembalian Buku</h3>
     <input type="text" id="bookId" placeholder="ID Buku">
     <button onclick="returnBook()">Kembalikan</button>
+    <div style="margin-bottom: 20px; text-align: left;">
+      <a href="index.html"
+        style="display: inline-block; padding: 8px 16px; background: #007bff; color: white; border-radius: 4px; text-decoration: none;">←
+      </a>
+    </div>
+
     <p id="message"></p>
   </div>
 
