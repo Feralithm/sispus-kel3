@@ -22,6 +22,8 @@ app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'public/login.html'));
 });
 
+module.exports = app;
+
 app.listen(PORT, () => {
   console.log(`Server jalan di http://localhost:${PORT}`);
 });
